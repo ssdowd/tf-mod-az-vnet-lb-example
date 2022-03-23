@@ -59,6 +59,19 @@ resource "azurerm_public_ip" "vmss" {
   tags                = var.tags
 }
 
+resource "azurerm_lb" "vmss" {
+  name                = "vmss-lb"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.vmss.name
+
+  frontend_ip_configuration {
+    name                 = "PublicIPAddress"
+    public_ip_address_id = azurerm_public_ip.vmss.id
+  }
+
+  tags = var.tags
+}
+
 resource "azurerm_network_security_group" "secgroup" {
   depends_on = [
     azurerm_resource_group.vmss
@@ -93,19 +106,6 @@ resource "azurerm_network_security_group" "secgroup" {
 }
 
 
-resource "azurerm_lb" "vmss" {
-  name                = "vmss-lb"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.vmss.name
-
-  frontend_ip_configuration {
-    name                 = "PublicIPAddress"
-    public_ip_address_id = azurerm_public_ip.vmss.id
-  }
-
-  tags = var.tags
-}
-
 resource "azurerm_lb_backend_address_pool" "bpepool" {
   loadbalancer_id = azurerm_lb.vmss.id
   name            = "BackEndAddressPool"
@@ -134,8 +134,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   name                = "vmscaleset"
   location            = var.location
   resource_group_name = azurerm_resource_group.vmss.name
-  instances      = 2
-  admin_username = "azureuser"
+  instances           = 2
+  admin_username      = "azureuser"
   admin_ssh_key {
     username   = "azureuser"
     public_key = file("~/.ssh/id_rsa.pub")
