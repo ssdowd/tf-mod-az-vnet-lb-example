@@ -6,7 +6,8 @@ terraform {
     }
   }
 
-  # These cannot be variables
+  # These cannot be variables.  
+  # Note: Azure doesn't need something like a DynamoDB for locking.  Storage does that.
   backend "azurerm" {
     resource_group_name  = "tfstate"
     storage_account_name = "tfstatefjbo4"
