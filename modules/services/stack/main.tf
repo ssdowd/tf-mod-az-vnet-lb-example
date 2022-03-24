@@ -1,30 +1,6 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 2.65"
-    }
-  }
-
-  # These cannot be variables.  
-  # Note: Azure doesn't need something like a DynamoDB for locking.  Storage does that.
-  backend "azurerm" {
-    resource_group_name  = "tfstate"
-    storage_account_name = "tfstatefjbo4"
-    container_name       = "tfstate"
-    key                  = "ssd-vmss/terraform.tfstate"
-  }
-
-  required_version = ">= 1.1.0"
-}
-
-provider "azurerm" {
-  features {}
-}
-
 
 resource "azurerm_resource_group" "vmss" {
-  name     = var.resource_group_name
+  name     = "${var.stack_name}-rg"
   location = var.location
   tags     = var.tags
 }
@@ -37,7 +13,7 @@ resource "random_string" "fqdn" {
 }
 
 resource "azurerm_virtual_network" "vmss" {
-  name                = "vmss-vnet"
+  name                = "${var.stack_name}-vmss-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
   resource_group_name = azurerm_resource_group.vmss.name
@@ -45,14 +21,14 @@ resource "azurerm_virtual_network" "vmss" {
 }
 
 resource "azurerm_subnet" "vmss" {
-  name                 = "vmss-subnet"
+  name                 = "${var.stack_name}-vmss-subnet"
   resource_group_name  = azurerm_resource_group.vmss.name
   virtual_network_name = azurerm_virtual_network.vmss.name
   address_prefixes     = ["10.0.2.0/24"]
 }
 
 resource "azurerm_public_ip" "vmss" {
-  name                = "vmss-public-ip"
+  name                = "${var.stack_name}-vmss-public-ip"
   location            = var.location
   resource_group_name = azurerm_resource_group.vmss.name
   allocation_method   = "Static"
@@ -61,7 +37,7 @@ resource "azurerm_public_ip" "vmss" {
 }
 
 resource "azurerm_lb" "vmss" {
-  name                = "vmss-lb"
+  name                = "${var.stack_name}-vmss-lb"
   location            = var.location
   resource_group_name = azurerm_resource_group.vmss.name
 
@@ -77,8 +53,8 @@ resource "azurerm_network_security_group" "secgroup" {
   depends_on = [
     azurerm_resource_group.vmss
   ]
-  resource_group_name = var.resource_group_name
-  name                = var.resource_group_name
+  resource_group_name = azurerm_resource_group.vmss.name
+  name                = "${var.stack_name}-secgroup"
   location            = var.location
   tags                = var.tags
 
@@ -109,20 +85,20 @@ resource "azurerm_network_security_group" "secgroup" {
 
 resource "azurerm_lb_backend_address_pool" "bpepool" {
   loadbalancer_id = azurerm_lb.vmss.id
-  name            = "BackEndAddressPool"
+  name            = "${var.stack_name}-BackEndAddressPool"
 }
 
 resource "azurerm_lb_probe" "vmss" {
   resource_group_name = azurerm_resource_group.vmss.name
   loadbalancer_id     = azurerm_lb.vmss.id
-  name                = "ssh-running-probe"
+  name                = "${var.stack_name}-ssh-running-probe"
   port                = var.application_port
 }
 
 resource "azurerm_lb_rule" "lbnatrule" {
   resource_group_name            = azurerm_resource_group.vmss.name
   loadbalancer_id                = azurerm_lb.vmss.id
-  name                           = "http"
+  name                           = "${var.stack_name}-http-nat-rule"
   protocol                       = "Tcp"
   frontend_port                  = var.application_port
   backend_port                   = var.application_port
@@ -132,7 +108,7 @@ resource "azurerm_lb_rule" "lbnatrule" {
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
-  name                = "vmscaleset"
+  name                = "${var.stack_name}-vmscaleset"
   location            = var.location
   resource_group_name = azurerm_resource_group.vmss.name
   instances           = 2
@@ -141,7 +117,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     username   = "azureuser"
     public_key = file("~/.ssh/id_rsa.pub")
   }
-  custom_data = base64encode(file("web.conf"))
+  custom_data = var.custom_data
 
   sku = "Standard_DS1"
 
@@ -158,7 +134,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   }
 
   network_interface {
-    name    = "terraformnetworkprofile"
+    name    = "${var.stack_name}-terraformnetworkprofile"
     primary = true
 
     ip_configuration {
@@ -188,7 +164,7 @@ output "secret_value" {
 }
 
 resource "azurerm_public_ip" "jumpbox" {
-  name                = "jumpbox-public-ip"
+  name                = "${var.stack_name}-jumpbox-public-ip"
   location            = var.location
   resource_group_name = azurerm_resource_group.vmss.name
   allocation_method   = "Static"
@@ -197,7 +173,7 @@ resource "azurerm_public_ip" "jumpbox" {
 }
 
 resource "azurerm_network_interface" "jumpbox" {
-  name                = "jumpbox-nic"
+  name                = "${var.stack_name}-jumpbox-nic"
   location            = var.location
   resource_group_name = azurerm_resource_group.vmss.name
 
@@ -217,7 +193,7 @@ resource "azurerm_network_interface_security_group_association" "sga" {
 }
 
 resource "azurerm_linux_virtual_machine" "jumpbox" {
-  name                  = "jumpbox"
+  name                  = "${var.stack_name}-jumpbox"
   location              = var.location
   resource_group_name   = azurerm_resource_group.vmss.name
   network_interface_ids = [azurerm_network_interface.jumpbox.id]
