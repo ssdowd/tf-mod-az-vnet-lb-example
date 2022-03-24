@@ -25,5 +25,8 @@ provider "azurerm" {
 module "stack" {
     source = "../../../modules/services/stack"
     stack_name = var.stack_name
+    tags = var.tags
+    location = var.location
+    admin_ssh_public_key = file("~/.ssh/id_rsa.pub")
     custom_data = base64encode(file("web.conf"))
 }
