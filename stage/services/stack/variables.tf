@@ -1,6 +1,6 @@
 variable "stack_name" {
   type    = string
-  default = "dev-stack"
+  default = "stage-stack"
 }
 
 variable "location" {
@@ -16,7 +16,7 @@ variable "tags" {
   description = "Map of the tags to use for the resources that are deployed"
   type        = map(string)
   default = {
-    environment = "dev"
+    environment = "stage"
     team        = "devops"
   }
 }

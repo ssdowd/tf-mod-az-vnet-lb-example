@@ -12,7 +12,7 @@ terraform {
     resource_group_name  = "tfstate"
     storage_account_name = "tfstatefjbo4"
     container_name       = "tfstate"
-    key                  = "ssd-vmss/dev/terraform.tfstate"
+    key                  = "ssd-vmss/stage/terraform.tfstate"
   }
 
   required_version = ">= 1.1.0"
