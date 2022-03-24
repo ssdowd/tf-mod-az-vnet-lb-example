@@ -172,6 +172,21 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   tags = var.tags
 }
 
+data "azurerm_key_vault" "keyvault" {
+  resource_group_name = "tfstate"
+  name                = "examplekeys"
+}
+
+data "azurerm_key_vault_secret" "dbpassword" {
+  name         = "db-password"
+  key_vault_id = data.azurerm_key_vault.keyvault.id
+}
+
+output "secret_value" {
+  value     = data.azurerm_key_vault_secret.dbpassword.value
+  sensitive = true
+}
+
 resource "azurerm_public_ip" "jumpbox" {
   name                = "jumpbox-public-ip"
   location            = var.location
