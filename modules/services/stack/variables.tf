@@ -1,6 +1,6 @@
-variable "resource_group_name" {
-  description = "Name of the resource group in which the resources will be created"
-  default     = "myResourceGroup"
+variable "stack_name" {
+  description = "Name for the stack to be created, used in all other names"
+  default     = "myStack"
 }
 
 variable "location" {
@@ -11,10 +11,12 @@ variable "location" {
 variable "tags" {
   description = "Map of the tags to use for the resources that are deployed"
   type        = map(string)
-  default = {
-    environment = "vmss example"
-    team        = "ssd"
-  }
+  default     = {}
+}
+
+variable "instance_count" {
+  type    = number
+  default = 1
 }
 
 variable "application_port" {
@@ -27,7 +29,10 @@ variable "admin_user" {
   default     = "azureuser"
 }
 
-variable "admin_password" {
-  description = "Default password for admin account"
-  default     = "foobar"
+variable "admin_ssh_public_key" {
+  type = string
+}
+
+variable "custom_data" {
+  type = string
 }
