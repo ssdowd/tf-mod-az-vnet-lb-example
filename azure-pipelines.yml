@@ -16,6 +16,11 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
+- task: TerraformCLI@0
+  displayName: 'check terraform version'
+  inputs:
+    command: version
+
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
