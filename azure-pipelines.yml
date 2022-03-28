@@ -4,7 +4,10 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+  branches:
+    include:
+    - azure-pipelines
+#- main
 
 pool:
   vmImage: ubuntu-latest
