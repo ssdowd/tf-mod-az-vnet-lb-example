@@ -19,8 +19,16 @@ steps:
 - script: terraform version
   displayName: 'Check terraform'
 
-- script: az account show
-  displayName: 'Check azure login'
+- task: AzureCLI@2
+  displayName: Azure CLI
+  inputs:
+    azureSubscription: d5878121-bf6f-42f3-8e87-b9e406a6cffc
+    scriptType: ps
+    scriptLocation: inlineScript
+    inlineScript: |
+      az --version
+      az account show
+
 
 # - task: TerraformInstaller
 #   displayName: install terraform
