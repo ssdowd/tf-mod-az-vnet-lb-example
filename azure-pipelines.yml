@@ -19,6 +19,9 @@ steps:
 - script: terraform version
   displayName: 'Check terraform'
 
+- script: az account show
+  displayName: 'Check azure login'
+
 # - task: TerraformInstaller
 #   displayName: install terraform
 #   inputs:
