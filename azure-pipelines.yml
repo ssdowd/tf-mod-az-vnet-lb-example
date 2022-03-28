@@ -16,15 +16,18 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- task: TerraformInstaller
-  displayName: install terraform
-  inputs:
-    terraformVersion: 1.1.7
+- script: terraform version
+  displayName: 'Check terraform'
 
-- task: TerraformCLI@0
-  displayName: 'check terraform version'
-  inputs:
-    command: version
+# - task: TerraformInstaller
+#   displayName: install terraform
+#   inputs:
+#     terraformVersion: 1.1.7
+
+# - task: TerraformCLI@0
+#   displayName: 'check terraform version'
+#   inputs:
+#     command: version
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
