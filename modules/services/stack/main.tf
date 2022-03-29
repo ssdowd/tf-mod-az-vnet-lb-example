@@ -55,7 +55,7 @@ resource "azurerm_network_security_rule" "rule_ssh" {
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "TCP"
-  source_address_prefix       = "68.206.65.233/32"
+  source_address_prefix       = var.allow_cidr
   source_port_range           = "*"
   destination_address_prefix  = "*"
   destination_port_range      = "22"
