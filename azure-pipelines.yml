@@ -27,7 +27,7 @@ steps:
     inlineScript: |
       az --version
       az account show
-#    azureSubscription: d5878121-bf6f-42f3-8e87-b9e406a6cffc
+   azureSubscription: d5878121-bf6f-42f3-8e87-b9e406a6cffc
 
 
 # - task: TerraformInstaller
