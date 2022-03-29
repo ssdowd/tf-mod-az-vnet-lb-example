@@ -20,3 +20,7 @@ variable "tags" {
     team        = "devops"
   }
 }
+
+variable "my_cidr" {
+  default = "0.0.0.0/0"
+}

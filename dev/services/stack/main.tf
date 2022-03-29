@@ -30,4 +30,5 @@ module "stack" {
   instance_count       = var.vminstances
   admin_ssh_public_key = file("~/.ssh/id_rsa.pub")
   custom_data          = base64encode(file("web.conf"))
+  allow_cidr           = var.my_cidr
 }

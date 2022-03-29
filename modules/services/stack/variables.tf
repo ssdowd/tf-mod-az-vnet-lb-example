@@ -24,6 +24,12 @@ variable "application_port" {
   default     = 80
 }
 
+variable "allow_cidr" {
+  description = "CIDR to allow SSH access"
+  default     = "0.0.0.0/0"
+  type        = string
+}
+
 variable "admin_user" {
   description = "User name to use as the admin account on the VMs that will be part of the VM scale set"
   default     = "azureuser"
