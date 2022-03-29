@@ -22,12 +22,12 @@ steps:
 - task: AzureCLI@2
   displayName: Azure CLI@2
   inputs:
-    azureSubscription: d5878121-bf6f-42f3-8e87-b9e406a6cffc
-    scriptType: ps
+    scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
       az --version
       az account show
+#    azureSubscription: d5878121-bf6f-42f3-8e87-b9e406a6cffc
 
 
 # - task: TerraformInstaller
