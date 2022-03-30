@@ -20,7 +20,7 @@ steps:
   displayName: 'Check terraform'
 
 - task: AzureCLI@2
-  displayName: Azure CLI@2
+  displayName: Azure CLI@2 check
   inputs:
     azureSubscription: 'Azure service connection'
     scriptType: bash
