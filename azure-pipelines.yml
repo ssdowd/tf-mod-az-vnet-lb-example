@@ -22,6 +22,7 @@ steps:
 - task: AzureCLI@2
   displayName: Azure CLI@2
   inputs:
+    azureSubscription: 'Azure service connection'
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
