@@ -28,6 +28,8 @@ steps:
     inlineScript: |
       az --version
       az account show
+      az group list
+      jq --version
 
 
 # - task: TerraformInstaller
