@@ -30,7 +30,8 @@ steps:
       az account show
       az group list
       jq --version
-      terragrunt --version
+      packer --version
+#      terragrunt --version
 
 
 # - task: TerraformInstaller
