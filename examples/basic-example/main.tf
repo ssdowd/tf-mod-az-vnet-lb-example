@@ -17,7 +17,8 @@ provider "azurerm" {
 }
 
 module "stack" {
-  source               = "git@github.com:ssdowd/tf-mod-az-vnet-lb-example.git//modules/services/stack?ref=v0.0.1"
+#  source               = "git@github.com:ssdowd/tf-mod-az-vnet-lb-example.git//modules/services/stack?ref=azure-pipelines"
+  source               = "../../modules/services/stack"
   stack_name           = var.stack_name
   tags                 = var.tags
   location             = var.location
