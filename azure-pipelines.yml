@@ -20,7 +20,7 @@ steps:
   displayName: 'Check terraform'
 
 - task: AzureCLI@2
-  displayName: Azure CLI@2
+  displayName: Azure CLI@2 checking
   inputs:
     azureSubscription: 'Azure service connection'
     scriptType: bash
@@ -28,6 +28,10 @@ steps:
     inlineScript: |
       az --version
       az account show
+      az group list
+      jq --version
+      packer --version
+#      terragrunt --version
 
 
 # - task: TerraformInstaller
