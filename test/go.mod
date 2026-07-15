@@ -1,8 +1,6 @@
 module github.com/ssdowd/tz-mod-az-vnet-lb-example
 
-go 1.23.0
-
-toolchain go1.24.1
+go 1.26
 
 require (
 	github.com/gruntwork-io/terratest v0.48.0
